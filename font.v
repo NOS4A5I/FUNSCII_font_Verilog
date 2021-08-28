@@ -22,7 +22,7 @@ The original memory source (font.bin) found here:
 //
 module funscii_font(
     input [7:0] char_idx, // up to 256 accessible characters
-    output reg [0:63] char_out // 64 pixels out (8x8 bitmap)
+    output wire [0:63] char_out // 64 pixels out (8x8 bitmap)
 );
 
     reg [0:16383] font_mem = {
@@ -199,16 +199,7 @@ module funscii_font(
         8'h00, 8'h00, 8'h76, 8'hDB, 8'hDB, 8'h6E, 8'h00, 8'h00
     };
 
-    wire [13:0] idx2addr = {char_idx, 6'd0}; 
-    
-    integer i;
-    always @(*) begin
-        for (i = 0; i < 256; i = i + 1) begin
-            if(i == char_idx) begin
-                char_out = font_mem[i*64+:64];
-            end
-        end
-    end
+	assign char_out = font_mem[{char_idx, 6'd0}+:64];
     
 endmodule
 
